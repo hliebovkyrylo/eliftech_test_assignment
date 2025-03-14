@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "eliftech_test_assignment",
   "private": true,
   "scripts": {
     "build": "turbo run build",
