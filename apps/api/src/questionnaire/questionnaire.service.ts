@@ -44,4 +44,18 @@ export class QuestionnaireService {
       throw new InternalServerErrorException('Error updating questionnaire');
     }
   }
+
+  async deleteQuestionnaire(id: string): Promise<Questionnaire> {
+    try {
+      return this.prisma.questionnaire.delete({
+        where: { id },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException('Questionnaire not found');
+      }
+
+      throw new InternalServerErrorException('Error deleting questionnaire');
+    }
+  }
 }

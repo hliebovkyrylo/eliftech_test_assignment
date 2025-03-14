@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Post,
   Put,
@@ -29,5 +30,13 @@ export class QuestionnaireController {
     @Param('questionnaireId') questionnaireId: string,
   ) {
     return this.questionnaireService.updateQuestionnaire(questionnaireId, data);
+  }
+
+  @Delete('delete/:questionnaireId')
+  @UseGuards(AuthGuard)
+  async deleteQuestionnaire(@Param('questionnaireId') questionnaireId: string) {
+    await this.questionnaireService.deleteQuestionnaire(questionnaireId);
+
+    return { message: 'Questionnaire deleted successfully' };
   }
 }
