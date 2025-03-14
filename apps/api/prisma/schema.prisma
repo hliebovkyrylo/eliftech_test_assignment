@@ -13,6 +13,7 @@ model User {
   name     String
   password String
   results  Result[]
+  questionnaires Questionnaire[]
 }
 
 model Questionnaire {
@@ -21,6 +22,8 @@ model Questionnaire {
   description String
   questions   Question[]
   results     Result[]
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Question {

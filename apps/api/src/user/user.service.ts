@@ -1,12 +1,15 @@
 import {
   HttpException,
+  Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 
+@Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getUserById(userId: string): Promise<User> {
     try {

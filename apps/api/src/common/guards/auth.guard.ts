@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   HttpException,
   Inject,
+  Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,8 +12,9 @@ import { verifyToken } from '../../utils/token.util';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { UserService } from 'src/user/user.service';
 
+@Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(@Inject(UserService) private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const request = ctx.switchToHttp().getRequest();
@@ -48,7 +50,6 @@ export class AuthGuard implements CanActivate {
       if (error instanceof HttpException) {
         throw error;
       }
-
       throw new UnauthorizedException('Invalid authentication');
     }
   }
