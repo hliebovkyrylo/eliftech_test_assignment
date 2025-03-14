@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
@@ -12,5 +20,14 @@ export class QuestionnaireController {
   async createQuestionnaire(@Req() req, @Body() data: CreateQuestionnaireDto) {
     const userId = req.user.id;
     return this.questionnaireService.createQuestionnaire(data, userId);
+  }
+
+  @Put('update/:questionnaireId')
+  @UseGuards(AuthGuard)
+  async updateQuestionnaire(
+    @Body() data: CreateQuestionnaireDto,
+    @Param('questionnaireId') questionnaireId: string,
+  ) {
+    return this.questionnaireService.updateQuestionnaire(questionnaireId, data);
   }
 }
