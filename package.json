@@ -11,7 +11,6 @@
     "docker:down": "docker-compose down"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "turbo": "^2.4.4",
     "typescript": "5.8.2"
   },
@@ -23,12 +22,5 @@
     "apps/*",
     "packages/*"
   ],
-  "dependencies": {
-    "@anatine/zod-nestjs": "^2.0.10",
-    "bcrypt": "^5.1.1",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
-    "jsonwebtoken": "^9.0.2",
-    "zod-validation-error": "^3.4.0"
-  }
+  "dependencies": {}
 }
