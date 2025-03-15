@@ -209,7 +209,7 @@ export class QuestionnaireService {
     } else if (sortBy === SortBy.QUESTION_COUNT) {
       orderBy['questions'] = { _count: sortOrder };
     } else if (sortBy === SortBy.COMPLETED_COUNT) {
-      orderBy['completions'] = { _count: sortOrder };
+      orderBy['results'] = { _count: sortOrder };
     }
 
     const skip = (page - 1) * pageSize;

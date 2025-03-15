@@ -5,41 +5,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/card";
+import { GetQuestionnaires } from "@/lib/types/questionnaire";
 import { EllipsisHorizontalIcon } from "@heroicons/react/16/solid";
+import Link from "next/link";
 
-interface QuestionnaireCardProps {
-  title: string;
-  description: string;
-  numOfQuestions: number;
-  numOfFillings: number;
-}
-
-export const QuestionnaireCard = ({
-  title,
-  description,
-  numOfQuestions,
-  numOfFillings,
-}: QuestionnaireCardProps) => {
+export const QuestionnaireCard = ({ data }: { data: GetQuestionnaires }) => {
   return (
-    <Card>
-      <CardTitle className="flex justify-between">
-        <p>{title}</p>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <EllipsisHorizontalIcon className="h-5 w-5" />
-            <DropdownMenuContent>
-              <DropdownMenuItem>Run</DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuTrigger>
-        </DropdownMenu>
-      </CardTitle>
-      <CardContent>{description}</CardContent>
-      <CardFooter className="block">
-        <p>Questions: {numOfQuestions}</p>
-        <p>Fillings: {numOfFillings}</p>
-      </CardFooter>
-    </Card>
+    <Link href={`/questionnaire/${data.id}`}>
+      <Card>
+        <CardTitle className="flex justify-between">
+          <p>{data.title}</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <EllipsisHorizontalIcon className="h-5 w-5" />
+              <DropdownMenuContent>
+                <DropdownMenuItem>Run</DropdownMenuItem>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuTrigger>
+          </DropdownMenu>
+        </CardTitle>
+        <CardContent>{data.description}</CardContent>
+        <CardFooter className="block">
+          <p>Questions: {data._count.questions}</p>
+          <p>Fillings: {data._count.results}</p>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 };
