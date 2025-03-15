@@ -401,4 +401,31 @@ export class QuestionnaireService {
       throw new InternalServerErrorException('Error submitting questionnaire');
     }
   }
+
+  async getQuestionnaireById(id: string): Promise<Questionnaire> {
+    try {
+      const questionnaire = await this.prisma.questionnaire.findUnique({
+        where: { id },
+        include: {
+          questions: {
+            include: {
+              variants: true,
+            },
+          },
+        },
+      });
+
+      if (!questionnaire) {
+        throw new NotFoundException('Questionnaire not found');
+      }
+
+      return questionnaire;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Error fetching questionnaire');
+    }
+  }
 }

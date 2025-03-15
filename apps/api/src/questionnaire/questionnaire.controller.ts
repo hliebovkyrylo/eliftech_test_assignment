@@ -61,4 +61,9 @@ export class QuestionnaireController {
     const userId = req.user.id;
     return this.questionnaireService.submitQuestionnaire(userId, data);
   }
+
+  @Get(':questionnaireId')
+  async getQuestionnaire(@Param('questionnaireId') questionnaireId: string) {
+    return this.questionnaireService.getQuestionnaireById(questionnaireId);
+  }
 }
