@@ -66,4 +66,17 @@ export class QuestionnaireController {
   async getQuestionnaire(@Param('questionnaireId') questionnaireId: string) {
     return this.questionnaireService.getQuestionnaireById(questionnaireId);
   }
+
+  @Get(':questionnaireId/is-submitted')
+  @UseGuards(AuthGuard)
+  async isQuestionnaireSubmitted(
+    @Param('questionnaireId') questionnaireId: string,
+    @Req() req,
+  ) {
+    const userId = req.user.id;
+    return this.questionnaireService.isAlreadyCompleted(
+      userId,
+      questionnaireId,
+    );
+  }
 }

@@ -428,4 +428,15 @@ export class QuestionnaireService {
       throw new InternalServerErrorException('Error fetching questionnaire');
     }
   }
+
+  async isAlreadyCompleted(userId: string, questionnaireId: string) {
+    const result = await this.prisma.result.findFirst({
+      where: {
+        userId,
+        questionnaireId,
+      },
+    });
+
+    return { isSubmitted: !!result };
+  }
 }
