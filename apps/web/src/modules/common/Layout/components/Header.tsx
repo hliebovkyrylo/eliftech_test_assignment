@@ -13,20 +13,20 @@ export const Header = () => {
       <nav>
         <ul className="flex gap-10">
           <li>
-            <a
+            <Link
               className={`${currentPath === "/" ? "text-white" : "text-slate-500"} text-lg hover:text-white transition-colors`}
               href="/"
             >
               Home
-            </a>
+            </Link>
           </li>
           <li>
-            <a
+            <Link
               className={`${currentPath === "/create-survey" ? "text-white" : "text-slate-500"} text-lg hover:text-white transition-colors`}
               href="/create-survey"
             >
               Create questionnaire
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

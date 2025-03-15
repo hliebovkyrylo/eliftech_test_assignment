@@ -59,7 +59,7 @@ export const SignInForm = () => {
         {mutation.isPending || mutation.isSuccess ? "Loading..." : "Sign In"}
       </Button>
       <div className="text-white">
-        Don't have a account?{" "}
+        Don&apos;t have an account?{" "}
         <Link className="text-slate-400" href={"/sign-up"}>
           Sign Up
         </Link>
