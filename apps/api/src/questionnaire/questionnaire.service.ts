@@ -6,6 +6,11 @@ import {
 import { QuestionnaireDto } from './dto/questionnaire.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Questionnaire } from '@prisma/client';
+import {
+  GetAllQuestionnairesDto,
+  SortBy,
+  SortOrder,
+} from './dto/getAllQuestionnaires.dto';
 
 @Injectable()
 export class QuestionnaireService {
@@ -184,5 +189,46 @@ export class QuestionnaireService {
 
       throw new InternalServerErrorException('Error deleting questionnaire');
     }
+  }
+
+  async getAllQuestionnaires(
+    dto: GetAllQuestionnairesDto,
+  ): Promise<{ questionnaires: Questionnaire[]; total: number }> {
+    const {
+      page = 1,
+      pageSize = 10,
+      sortBy = SortBy.TITLE,
+      sortOrder = SortOrder.ASC,
+    } = dto;
+
+    const orderBy = {};
+
+    if (sortBy === SortBy.TITLE) {
+      orderBy['title'] = sortOrder;
+    } else if (sortBy === SortBy.QUESTION_COUNT) {
+      orderBy['questions'] = { _count: sortOrder };
+    } else if (sortBy === SortBy.COMPLETED_COUNT) {
+      orderBy['completions'] = { _count: sortOrder };
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    const questionnaires = await this.prisma.questionnaire.findMany({
+      orderBy,
+      skip,
+      take: pageSize,
+      include: {
+        _count: {
+          select: {
+            questions: true,
+            results: true,
+          },
+        },
+      },
+    });
+
+    const total = await this.prisma.questionnaire.count();
+
+    return { questionnaires, total };
   }
 }

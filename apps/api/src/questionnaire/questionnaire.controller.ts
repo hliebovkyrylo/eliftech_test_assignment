@@ -2,15 +2,18 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { QuestionnaireDto } from './dto/questionnaire.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { GetAllQuestionnairesDto } from './dto/getAllQuestionnaires.dto';
 
 @Controller('questionnaire')
 export class QuestionnaireController {
@@ -44,5 +47,10 @@ export class QuestionnaireController {
     await this.questionnaireService.deleteQuestionnaire(questionnaireId);
 
     return { message: 'Questionnaire deleted successfully' };
+  }
+
+  @Get('get-all')
+  async getAllQuestionnaires(@Query() data: GetAllQuestionnairesDto) {
+    return this.questionnaireService.getAllQuestionnaires(data);
   }
 }
