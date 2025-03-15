@@ -14,7 +14,7 @@ export const Header = () => {
         <ul className="flex gap-10">
           <li>
             <a
-              className={`${currentPath === "/" ? "text-white" : "text-slate-200"} text-lg hover:text-white transition-colors`}
+              className={`${currentPath === "/" ? "text-white" : "text-slate-500"} text-lg hover:text-white transition-colors`}
               href="/"
             >
               Home

@@ -38,8 +38,8 @@ export const QuestionnaireResultViewer = ({ result }: { result: Result }) => {
         </h2>
         <p className="text-gray-300 mb-4">{result.questionnaire.description}</p>
         <div className="text-sm text-gray-400">
-          Время заполнения: {Math.floor(result.durationSec / 60)} мин.{" "}
-          {result.durationSec % 60} сек.
+          Time of filling: {Math.floor(result.durationSec / 60)} min.{" "}
+          {result.durationSec % 60} sec.
         </div>
       </div>
 

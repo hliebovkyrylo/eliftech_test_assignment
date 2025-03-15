@@ -30,10 +30,9 @@ export const QuestionnaireForm = ({
       return await api.submitQuestionnaire(data);
     },
     onSuccess: () => {
-      alert("Survey submitted successfully!");
+      window.location.reload();
     },
-    onError: (error) => {
-      console.error("Error submitting survey:", error);
+    onError: () => {
       alert("Failed to submit survey. Please try again.");
     },
   });
@@ -104,6 +103,14 @@ export const QuestionnaireForm = ({
       className="w-full max-w-4xl flex flex-col gap-6"
       onSubmit={handleSubmit}
     >
+      <div className="w-full max-w-4xl flex flex-col gap-6">
+        <div className="bg-slate-800 p-6 rounded-2xl">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            {questionnaire.title}
+          </h2>
+          <p className="text-gray-300 mb-4">{questionnaire.description}</p>
+        </div>
+      </div>
       {questionnaire.questions.map((question) => {
         switch (question.type) {
           case QuestionType.TEXT:
