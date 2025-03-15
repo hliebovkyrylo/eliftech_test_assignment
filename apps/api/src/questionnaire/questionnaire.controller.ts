@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
 import { QuestionnaireDto } from './dto/questionnaire.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 import { GetAllQuestionnairesDto } from './dto/getAllQuestionnaires.dto';
 import { SubmitQuestionnaireDto } from './dto/submitQuestionnaire.dto';
 

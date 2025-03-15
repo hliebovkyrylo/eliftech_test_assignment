@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { QuestionnaireDto } from './dto/questionnaire.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Questionnaire, QuestionType } from '@prisma/client';
 import {
   GetAllQuestionnairesDto,
