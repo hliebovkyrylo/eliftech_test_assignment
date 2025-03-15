@@ -1,13 +1,14 @@
 import { Answer } from "./answer";
 import { Questionnaire } from "./questionnaire";
-import { User } from "./user";
+import { Variant } from "./variant";
 
 export interface Result {
   id: string;
   userId: string;
-  user: User;
   durationSec: number;
   questionnaireId: string;
-  questionnaire: Questionnaire;
   answers: Answer[];
+  questionnaire: Questionnaire;
+  variant?: Variant | null;
+  variantId?: string;
 }

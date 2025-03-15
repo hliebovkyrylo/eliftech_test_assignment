@@ -19,7 +19,12 @@ export class ResultService {
         include: {
           answers: {
             include: {
-              question: true,
+              question: {
+                include: {
+                  variants: true,
+                },
+              },
+              variant: true,
             },
           },
           questionnaire: true,
