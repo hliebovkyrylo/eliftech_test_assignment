@@ -5,6 +5,7 @@ import { GetQuestionnaires, Questionnaire } from "../types/questionnaire";
 import { endpoints } from "./endpoints";
 import { Result } from "../types/result";
 import { SignInInput } from "@/modules/auth/SignInForm/schemas/signInSchema";
+import { SignUpInput } from "@/modules/auth/SignUpForm/schemas/signUpSchema";
 
 export const api = {
   getAllQuestionnaires: (params: QuestionnairesFilters) => {
@@ -48,6 +49,12 @@ export const api = {
   signIn: (data: SignInInput) => {
     return axios.post<SuccessResponse<{ access_token: string }>>(
       endpoints.signIn(),
+      data
+    );
+  },
+  signUp: (data: SignUpInput) => {
+    return axios.post<SuccessResponse<{ access_token: string }>>(
+      endpoints.signUp(),
       data
     );
   },

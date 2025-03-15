@@ -1,28 +1,28 @@
-import { Button } from "@/components/button";
-import { Input } from "@/components/input";
-import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { SignInInput, signInSchema } from "./schemas/signInSchema";
+import { SignUpInput, signUpSchema } from "./schemas/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api/api";
 import { AxiosError } from "axios";
 import { ErrorResponse, SuccessResponse } from "@/lib/types/apiResponse";
-import { useState } from "react";
 import cookie from "js-cookie";
+import { Input } from "@/components/input";
+import { Button } from "@/components/button";
+import Link from "next/link";
 
-export const SignInForm = () => {
+export const SignUpForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
-  const { register, handleSubmit } = useForm<SignInInput>({
-    resolver: zodResolver(signInSchema),
+  const { register, handleSubmit } = useForm<SignUpInput>({
+    resolver: zodResolver(signUpSchema),
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: SignInInput) => {
-      const response = await api.signIn(data);
+    mutationFn: async (data: SignUpInput) => {
+      const response = await api.signUp(data);
       return response.data;
     },
     onError: (response: AxiosError<ErrorResponse>) => {
@@ -34,7 +34,7 @@ export const SignInForm = () => {
     },
   });
 
-  const onSubmit = handleSubmit((data: SignInInput) => {
+  const onSubmit = handleSubmit((data: SignUpInput) => {
     mutation.mutate(data);
   });
 
@@ -43,7 +43,7 @@ export const SignInForm = () => {
       onSubmit={!mutation.isPending ? onSubmit : () => {}}
       className="flex flex-col gap-3 max-w-96 w-full bg-slate-900 p-5 rounded-2xl"
     >
-      <h1 className="text-center text-white text-lg">Sign In</h1>
+      <h1 className="text-center text-white text-lg">Sign Up</h1>
       <div className="text-red-400">{error}</div>
       <Input
         {...register("email")}
@@ -52,6 +52,7 @@ export const SignInForm = () => {
         placeholder="Enter email"
       />
       <Input {...register("password")} required placeholder="Enter password" />
+      <Input {...register("name")} required placeholder="Enter your name" />
       <Button
         type="submit"
         className="bg-amber-200 cursor-pointer hover:bg-amber-100 transition-colors text-black text-base"
@@ -59,9 +60,9 @@ export const SignInForm = () => {
         {mutation.isPending || mutation.isSuccess ? "Loading..." : "Sign In"}
       </Button>
       <div className="text-white">
-        Don't have a account?{" "}
-        <Link className="text-slate-400" href={"/sign-up"}>
-          Sign Up
+        Already have an account?{" "}
+        <Link className="text-slate-400" href={"/sign-in"}>
+          Sign In
         </Link>
       </div>
     </form>
