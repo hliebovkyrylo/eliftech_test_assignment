@@ -4,13 +4,13 @@ import { SuccessResponse } from "../types/apiResponse";
 import { GetQuestionnaires, Questionnaire } from "../types/questionnaire";
 import { endpoints } from "./endpoints";
 import { Result } from "../types/result";
+import { SignInInput } from "@/modules/auth/SignInForm/schemas/signInSchema";
 
 export const api = {
   getAllQuestionnaires: (params: QuestionnairesFilters) => {
-    return axios.get<SuccessResponse<{ questionnaires: GetQuestionnaires[], total: number }>>(
-      endpoints.getAllQuestionnaires(),
-      { params }
-    );
+    return axios.get<
+      SuccessResponse<{ questionnaires: GetQuestionnaires[]; total: number }>
+    >(endpoints.getAllQuestionnaires(), { params });
   },
   getQuestionnaire: (id: string) => {
     return axios.get<SuccessResponse<Questionnaire>>(
@@ -44,5 +44,11 @@ export const api = {
     return axios.get<SuccessResponse<{ isSubmitted: boolean }>>(
       endpoints.isSubmittedQuestionnaire(id)
     );
-  }
+  },
+  signIn: (data: SignInInput) => {
+    return axios.post<SuccessResponse<{ access_token: string }>>(
+      endpoints.signIn(),
+      data
+    );
+  },
 };
