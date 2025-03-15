@@ -29,7 +29,6 @@ model Questionnaire {
 model Question {
   id              String        @id @default(uuid())
   title           String
-  description     String
   type            QuestionType
   questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
   questionnaireId String
@@ -69,5 +68,5 @@ model Answer {
 enum QuestionType {
   TEXT
   MULTIPLE_CHOICE
-  CHECKBOX
+  ONE_CHOICE
 }

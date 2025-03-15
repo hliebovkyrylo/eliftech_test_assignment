@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { QuestionnaireService } from './questionnaire.service';
-import { CreateQuestionnaireDto } from './dto/create-questionnaire.dto';
+import { QuestionnaireDto } from './dto/questionnaire.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @Controller('questionnaire')
@@ -18,7 +18,7 @@ export class QuestionnaireController {
 
   @Post('create')
   @UseGuards(AuthGuard)
-  async createQuestionnaire(@Req() req, @Body() data: CreateQuestionnaireDto) {
+  async createQuestionnaire(@Req() req, @Body() data: QuestionnaireDto) {
     const userId = req.user.id;
     return this.questionnaireService.createQuestionnaire(data, userId);
   }
@@ -26,10 +26,16 @@ export class QuestionnaireController {
   @Put('update/:questionnaireId')
   @UseGuards(AuthGuard)
   async updateQuestionnaire(
-    @Body() data: CreateQuestionnaireDto,
+    @Req() req,
+    @Body() data: QuestionnaireDto,
     @Param('questionnaireId') questionnaireId: string,
   ) {
-    return this.questionnaireService.updateQuestionnaire(questionnaireId, data);
+    const userId = req.user.id;
+    return this.questionnaireService.updateQuestionnaire(
+      questionnaireId,
+      data,
+      userId,
+    );
   }
 
   @Delete('delete/:questionnaireId')
