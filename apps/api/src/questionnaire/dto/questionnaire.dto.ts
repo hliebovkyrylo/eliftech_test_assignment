@@ -1,5 +1,6 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { QuestionDto } from './questionDto';
+import { Type } from 'class-transformer';
 
 export class QuestionnaireDto {
   @IsString()
@@ -11,6 +12,7 @@ export class QuestionnaireDto {
   description: string;
 
   @IsArray()
-  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => QuestionDto)
   questions: QuestionDto[];
 }

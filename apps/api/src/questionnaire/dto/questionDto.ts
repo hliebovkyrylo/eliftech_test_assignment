@@ -1,6 +1,7 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 import { VariantDto } from "./variantDto";
 import { QuestionType } from "@prisma/client";
+import { Type } from "class-transformer";
 
 export class QuestionDto {
   @IsString()
@@ -11,6 +12,8 @@ export class QuestionDto {
   @IsNotEmpty()
   type: QuestionType;
 
-  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => VariantDto)
   variants?: VariantDto[];
 }

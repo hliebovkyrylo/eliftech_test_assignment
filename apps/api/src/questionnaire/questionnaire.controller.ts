@@ -14,6 +14,7 @@ import { QuestionnaireService } from './questionnaire.service';
 import { QuestionnaireDto } from './dto/questionnaire.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { GetAllQuestionnairesDto } from './dto/getAllQuestionnaires.dto';
+import { SubmitQuestionnaireDto } from './dto/submitQuestionnaire.dto';
 
 @Controller('questionnaire')
 export class QuestionnaireController {
@@ -52,5 +53,12 @@ export class QuestionnaireController {
   @Get('get-all')
   async getAllQuestionnaires(@Query() data: GetAllQuestionnairesDto) {
     return this.questionnaireService.getAllQuestionnaires(data);
+  }
+
+  @Post('submit')
+  @UseGuards(AuthGuard)
+  async submitQuestionnaire(@Req() req, @Body() data: SubmitQuestionnaireDto) {
+    const userId = req.user.id;
+    return this.questionnaireService.submitQuestionnaire(userId, data);
   }
 }
