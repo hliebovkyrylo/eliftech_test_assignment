@@ -2,101 +2,22 @@ import { Button } from "@/components/button";
 import { MultipleQuestion, SingleQuestion, TextQuestion } from "./components";
 import { Questionnaire } from "@/lib/types/questionnaire";
 import { QuestionType } from "@/lib/types/questionType";
-import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/api/api";
-import { SubmitQuestionnaireType } from "./schemas/sendFormSchema";
+import { useQuestionnaireState } from "./hooks/useQuestionnaireState";
+import { useQuestionnaireSubmit } from "./hooks/useQuestionnaireSubmit";
 
 export const QuestionnaireForm = ({
   questionnaire,
 }: {
   questionnaire: Questionnaire;
 }) => {
-  const [answers, setAnswers] = useState<{ [key: string]: string | string[] }>(
-    {}
+  const { answers, startTime, handleChange, clearCookies } =
+    useQuestionnaireState(questionnaire.id);
+  const { handleSubmit, isPending } = useQuestionnaireSubmit(
+    questionnaire,
+    answers,
+    startTime,
+    clearCookies
   );
-  const [startTime, setStartTime] = useState<number>(Date.now());
-
-  useEffect(() => {
-    setStartTime(Date.now());
-  }, []);
-
-  const handleChange = (questionId: string, value: string | string[]) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
-  };
-
-  const mutation = useMutation({
-    mutationFn: async (data: SubmitQuestionnaireType) => {
-      return await api.submitQuestionnaire(data);
-    },
-    onSuccess: () => {
-      window.location.reload();
-    },
-    onError: () => {
-      alert("Failed to submit survey. Please try again.");
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const unansweredQuestions = questionnaire.questions.filter((question) => {
-      return !answers[question.id];
-    });
-
-    if (unansweredQuestions.length > 0) {
-      const firstUnanswered = unansweredQuestions[0];
-      alert(
-        `You must select an option for the question: ${firstUnanswered.title}`
-      );
-      return;
-    }
-
-    const durationSec = Math.round((Date.now() - startTime) / 1000);
-
-    const formattedAnswers = Object.entries(answers).flatMap(
-      ([questionId, value]): Array<{
-        questionId: string;
-        textValue?: string;
-        variantId?: string;
-      }> => {
-        const question = questionnaire.questions.find(
-          (q) => q.id === questionId
-        );
-
-        if (!question) return [];
-
-        if (question.type === QuestionType.TEXT) {
-          return [
-            {
-              questionId,
-              textValue: value as string,
-            },
-          ];
-        } else if (question.type === QuestionType.ONE_CHOICE) {
-          return [
-            {
-              questionId,
-              variantId: value as string,
-            },
-          ];
-        } else if (question.type === QuestionType.MULTIPLE_CHOICE) {
-          return (value as string[]).map((variantId) => ({
-            questionId,
-            variantId,
-          }));
-        }
-
-        return [];
-      }
-    );
-
-    mutation.mutate({
-      questionnaireId: questionnaire.id,
-      durationSec,
-      answers: formattedAnswers,
-    });
-  };
 
   return (
     <form
@@ -116,9 +37,10 @@ export const QuestionnaireForm = ({
           case QuestionType.TEXT:
             return (
               <TextQuestion
-                onChange={(value) => handleChange(question.id, value)}
                 key={question.id}
                 questionText={question.title}
+                onChange={(value) => handleChange(question.id, value)}
+                value={(answers[question.id] as string) || ""}
               />
             );
           case QuestionType.ONE_CHOICE:
@@ -128,6 +50,7 @@ export const QuestionnaireForm = ({
                 questionText={question.title}
                 variants={question.variants || []}
                 onChange={(value) => handleChange(question.id, value)}
+                value={(answers[question.id] as string) || ""}
               />
             );
           case QuestionType.MULTIPLE_CHOICE:
@@ -137,6 +60,7 @@ export const QuestionnaireForm = ({
                 questionText={question.title}
                 variants={question.variants || []}
                 onChange={(values) => handleChange(question.id, values)}
+                value={(answers[question.id] as string[]) || []}
               />
             );
           default:
@@ -146,9 +70,9 @@ export const QuestionnaireForm = ({
       <Button
         type="submit"
         className="w-24 cursor-pointer"
-        disabled={mutation.isPending}
+        disabled={isPending}
       >
-        {mutation.isPending ? "Sending..." : "Send"}
+        {isPending ? "Sending..." : "Send"}
       </Button>
     </form>
   );

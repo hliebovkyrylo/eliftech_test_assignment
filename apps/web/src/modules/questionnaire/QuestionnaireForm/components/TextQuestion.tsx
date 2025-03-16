@@ -1,17 +1,15 @@
 import { Input } from "@/components/input";
-import { useState } from "react";
 
 export const TextQuestion = ({
   questionText,
   onChange,
+  value,
 }: {
   questionText: string;
   onChange: (value: string) => void;
+  value: string;
 }) => {
-  const [value, setValue] = useState("");
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
     onChange(e.target.value);
   };
 

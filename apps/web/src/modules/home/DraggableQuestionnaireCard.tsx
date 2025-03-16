@@ -67,11 +67,11 @@ export const DraggableQuestionnaireCard = ({
 
   return (
     <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
-      <Card>
+      <Card className="cursor-grab">
         <CardTitle className="flex justify-between truncate">
           <p>{data.title}</p>
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="cursor-pointer">
               <EllipsisHorizontalIcon className="h-5 w-5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>

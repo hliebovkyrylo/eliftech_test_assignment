@@ -1,27 +1,25 @@
 import { RadioGroup, RadioGroupItem } from "@/components/radio-group";
 import { Variant } from "@/lib/types/variant";
-import { useState } from "react";
 
 export const SingleQuestion = ({
   variants,
   questionText,
   onChange,
+  value,
 }: {
   variants: Variant[];
   questionText: string;
   onChange: (value: string) => void;
+  value: string;
 }) => {
-  const [selected, setSelected] = useState("");
-
-  const handleSelect = (value: string) => {
-    setSelected(value);
-    onChange(value);
+  const handleSelect = (newValue: string) => {
+    onChange(newValue);
   };
 
   return (
     <div className="bg-slate-900 p-5 rounded-2xl">
       <div className="text-white mb-2">{questionText}</div>
-      <RadioGroup value={selected} onValueChange={handleSelect}>
+      <RadioGroup value={value} onValueChange={handleSelect}>
         {variants.map((variant) => (
           <div key={variant.id} className="flex items-center gap-2">
             <RadioGroupItem value={variant.id} id={variant.id} />
