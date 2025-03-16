@@ -15,10 +15,15 @@ import Link from "next/link";
 export const SignUpForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit } = useForm<SignUpInput>({
     resolver: zodResolver(signUpSchema),
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const mutation = useMutation({
     mutationFn: async (data: SignUpInput) => {
@@ -51,7 +56,22 @@ export const SignUpForm = () => {
         required
         placeholder="Enter email"
       />
-      <Input {...register("password")} required placeholder="Enter password" />
+      <div className="relative">
+        <Input
+          {...register("password")}
+          type={showPassword ? "text" : "password"}
+          required
+          placeholder="Enter password"
+          disabled={mutation.isPending}
+        />
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white"
+        >
+          {showPassword ? "Hide" : "Show"}
+        </button>
+      </div>
       <Input {...register("name")} required placeholder="Enter your name" />
       <Button
         type="submit"
