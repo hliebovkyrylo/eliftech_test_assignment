@@ -2,7 +2,7 @@ import { api } from "@/lib/api/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { Questionnaire as QuestionnaireType } from "@/lib/types/questionnaire";
 import { Result } from "@/lib/types/result";
-import { MainLayout } from "@/modules/common";
+import { AuthGuard, MainLayout } from "@/modules/common";
 import {
   QuestionnaireForm,
   QuestionnaireResultViewer,
@@ -21,6 +21,7 @@ export default function Questionnaire() {
     queryKey: [endpoints.isSubmittedQuestionnaire(questionnaireId as string)],
     queryFn: () => api.isSubmittedQuestionnaire(questionnaireId as string),
     select: ({ data }) => data.data,
+    retry: false,
   });
 
   const { data: questionnaire, isLoading: questionnaireLoading } = useQuery({
@@ -45,16 +46,18 @@ export default function Questionnaire() {
     return <div>Loading...</div>;
 
   return (
-    <MainLayout>
-      <div className="flex justify-center">
-        {isSubmittedQuestionnaire?.isSubmitted ? (
-          <QuestionnaireResultViewer result={questionnaireResult as Result} />
-        ) : (
-          <QuestionnaireForm
-            questionnaire={questionnaire as QuestionnaireType}
-          />
-        )}
-      </div>
-    </MainLayout>
+    <AuthGuard>
+      <MainLayout>
+        <div className="flex justify-center">
+          {isSubmittedQuestionnaire?.isSubmitted ? (
+            <QuestionnaireResultViewer result={questionnaireResult as Result} />
+          ) : (
+            <QuestionnaireForm
+              questionnaire={questionnaire as QuestionnaireType}
+            />
+          )}
+        </div>
+      </MainLayout>
+    </AuthGuard>
   );
 }
