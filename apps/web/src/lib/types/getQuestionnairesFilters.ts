@@ -10,7 +10,7 @@ export enum SortBy {
 }
 
 export interface QuestionnairesFilters {
-  page: number;
+  page?: number;
   pageSize?: number;
   sortBy?: SortBy;
   sortOrder?: SortOrder;

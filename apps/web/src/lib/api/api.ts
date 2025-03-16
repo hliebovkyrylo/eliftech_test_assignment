@@ -68,7 +68,7 @@ export const api = {
     );
   },
   signUp: (data: SignUpInput) => {
-    return axios.post<SuccessResponse<{ access_token: string }>>(
+    return axios.post<SuccessResponse<{ accessToken: string }>>(
       endpoints.signUp(),
       data
     );

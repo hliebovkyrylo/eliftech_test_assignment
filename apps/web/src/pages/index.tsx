@@ -1,46 +1,55 @@
 import { api } from "@/lib/api/api";
 import { endpoints } from "@/lib/api/endpoints";
-import { SortBy, SortOrder } from "@/lib/types/getQuestionnairesFilters";
-import { MainLayout } from "@/modules/common";
+import {
+  QuestionnairesFilters,
+  SortBy,
+  SortOrder,
+} from "@/lib/types/getQuestionnairesFilters";
+import { Loader, MainLayout } from "@/modules/common";
 import {
   DraggableQuestionnaireCard,
+  QuestionnaireCardSkeleton,
   QuestionnaireFilterPanel,
-  useInfiniteScroll,
+  QuestionnairesPagination,
 } from "@/modules/home";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { GetQuestionnaires } from "@/lib/types/questionnaire";
 
 export default function Home() {
-  const initialFilters = {
+  const [filters, setFilters] = useState<QuestionnairesFilters>({
     sortBy: SortBy.TITLE,
     sortOrder: SortOrder.ASC,
-  };
-
-  const {
-    filters,
-    setFilters,
-    items: questionnaires,
-    hasMore,
-    isFetching,
-    loadMoreRef,
-    moveItems,
-  } = useInfiniteScroll<GetQuestionnaires>({
-    queryKey: endpoints.getAllQuestionnaires(),
-    queryFn: (filters) => api.getAllQuestionnaires(filters),
-    select: ({ data }) => data.data.questionnaires as GetQuestionnaires[],
-    initialFilters,
-    pageSize: 12,
+    page: 1,
+    pageSize: 9,
   });
 
-  const moveCard = useCallback(
-    (fromIndex: number, toIndex: number) => {
-      moveItems(fromIndex, toIndex);
-    },
-    [moveItems]
-  );
+  const [questionnaires, setQuestionnaires] = useState<GetQuestionnaires[]>([]);
+
+  const { data, isLoading: isLoadingQuestionnaires } = useQuery({
+    queryKey: [endpoints.getAllQuestionnaires(), filters],
+    queryFn: () => api.getAllQuestionnaires(filters),
+    select: ({ data }) => ({
+      questionnaires: data.data.questionnaires as GetQuestionnaires[],
+      total: data.data.total,
+    }),
+  });
+  useEffect(() => {
+    if (data) {
+      setQuestionnaires(data.questionnaires);
+    }
+  }, [data]);
+
+  const moveCard = useCallback((fromIndex: number, toIndex: number) => {
+    setQuestionnaires((prev) => {
+      const newOrder = [...prev];
+      const [movedItem] = newOrder.splice(fromIndex, 1);
+      newOrder.splice(toIndex, 0, movedItem);
+      return newOrder;
+    });
+  }, []);
 
   const { data: user, isLoading: isLoadingUser } = useQuery({
     queryKey: [endpoints.getMe()],
@@ -49,27 +58,48 @@ export default function Home() {
     retry: false,
   });
 
-  if (isLoadingUser) return <p>Loading...</p>;
+  useEffect(() => {
+    if (data?.questionnaires) {
+      setQuestionnaires(data.questionnaires);
+    }
+  }, [data]);
+
+  const handlePageChange = (newPage: number) => {
+    setFilters((prev) => ({ ...prev, page: newPage }));
+  };
+
+  if (isLoadingUser) return <Loader />;
 
   return (
     <DndProvider backend={HTML5Backend}>
       <MainLayout>
         <QuestionnaireFilterPanel filters={filters} setFilters={setFilters} />
-        <section className="grid grid-cols-3 max-[613px]:grid-cols-1 gap-4 mt-3">
-          {questionnaires.map((questionnaire, index) => (
-            <DraggableQuestionnaireCard
-              key={questionnaire.id}
-              data={questionnaire}
-              index={index}
-              moveCard={moveCard}
-              user={user}
-            />
-          ))}
+        <section className="grid grid-cols-3 max-[613px]:grid-cols-1 gap-4 mt-3 mb-5">
+          {!isLoadingQuestionnaires ? (
+            questionnaires.map((questionnaire, index) => (
+              <DraggableQuestionnaireCard
+                key={questionnaire.id}
+                data={questionnaire}
+                index={index}
+                moveCard={moveCard}
+                user={user}
+              />
+            ))
+          ) : (
+            <>
+              {[...Array(9)].map(() => (
+                <QuestionnaireCardSkeleton />
+              ))}
+            </>
+          )}
         </section>
-        {hasMore && (
-          <div ref={loadMoreRef} className="h-10">
-            {isFetching ? <p>Loading more...</p> : null}
-          </div>
+        {data?.total && (
+          <QuestionnairesPagination
+            currentPage={filters.page as number}
+            pageSize={filters.pageSize as number}
+            totalItems={data.total}
+            onPageChange={handlePageChange}
+          />
         )}
       </MainLayout>
     </DndProvider>

@@ -15,6 +15,7 @@ import cookie from "js-cookie";
 export const SignInForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit } = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
@@ -38,6 +39,10 @@ export const SignInForm = () => {
     mutation.mutate(data);
   });
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <form
       onSubmit={!mutation.isPending ? onSubmit : () => {}}
@@ -51,7 +56,22 @@ export const SignInForm = () => {
         required
         placeholder="Enter email"
       />
-      <Input {...register("password")} required placeholder="Enter password" />
+      <div className="relative">
+        <Input
+          {...register("password")}
+          type={showPassword ? "text" : "password"}
+          required
+          placeholder="Enter password"
+          disabled={mutation.isPending}
+        />
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white"
+        >
+          {showPassword ? "Hide" : "Show"}
+        </button>
+      </div>
       <Button
         type="submit"
         className="bg-amber-200 cursor-pointer hover:bg-amber-100 transition-colors text-black text-base"
@@ -59,7 +79,7 @@ export const SignInForm = () => {
         {mutation.isPending || mutation.isSuccess ? "Loading..." : "Sign In"}
       </Button>
       <div className="text-white">
-        Don&apos;t have an account?{" "}
+        Don't have an account?{" "}
         <Link className="text-slate-400" href={"/sign-up"}>
           Sign Up
         </Link>

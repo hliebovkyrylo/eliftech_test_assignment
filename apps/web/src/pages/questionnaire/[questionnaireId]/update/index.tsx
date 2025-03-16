@@ -1,7 +1,7 @@
 import { api } from "@/lib/api/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { Questionnaire } from "@/lib/types/questionnaire";
-import { AuthGuard, MainLayout } from "@/modules/common";
+import { AuthGuard, Loader, MainLayout } from "@/modules/common";
 import { UpdateQuestionnaireForm } from "@/modules/questionnaire";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -22,7 +22,7 @@ export default function UpdateQuestionnaire() {
     select: ({ data }) => data.data,
   });
 
-  if (questionnaireLoading || userLoading) return <div>Loading...</div>;
+  if (questionnaireLoading || userLoading) return <Loader />;
 
   if (user?.id !== questionnaire?.userId) router.replace("/");
 

@@ -28,8 +28,8 @@ export const SignUpForm = () => {
     onError: (response: AxiosError<ErrorResponse>) => {
       setError(response.response?.data.error_message || null);
     },
-    onSuccess: (response: SuccessResponse<{ access_token: string }>) => {
-      cookie.set("accessToken", response.data.access_token);
+    onSuccess: (response: SuccessResponse<{ accessToken: string }>) => {
+      cookie.set("accessToken", response.data.accessToken);
       router.push("/");
     },
   });

@@ -2,7 +2,7 @@ import { api } from "@/lib/api/api";
 import { endpoints } from "@/lib/api/endpoints";
 import { Questionnaire as QuestionnaireType } from "@/lib/types/questionnaire";
 import { Result } from "@/lib/types/result";
-import { AuthGuard, MainLayout } from "@/modules/common";
+import { AuthGuard, Loader, MainLayout } from "@/modules/common";
 import {
   QuestionnaireForm,
   QuestionnaireResultViewer,
@@ -43,7 +43,7 @@ export default function Questionnaire() {
     questionnaireLoading ||
     questionnaireResultLoading
   )
-    return <div>Loading...</div>;
+    return <Loader />;
 
   return (
     <AuthGuard>
