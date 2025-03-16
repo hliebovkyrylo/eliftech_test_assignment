@@ -57,12 +57,12 @@ export const SignUpForm = () => {
         type="submit"
         className="bg-amber-200 cursor-pointer hover:bg-amber-100 transition-colors text-black text-base"
       >
-        {mutation.isPending || mutation.isSuccess ? "Loading..." : "Sign In"}
+        {mutation.isPending || mutation.isSuccess ? "Loading..." : "Sign Up"}
       </Button>
       <div className="text-white">
         Already have an account?{" "}
         <Link className="text-slate-400" href={"/sign-in"}>
-          Sign Up
+          Sign In
         </Link>
       </div>
     </form>
