@@ -81,7 +81,7 @@ export const SignInForm = () => {
       <div className="text-white">
         Don't have an account?{" "}
         <Link className="text-slate-400" href={"/sign-up"}>
-          Sign Up
+          Sign In
         </Link>
       </div>
     </form>

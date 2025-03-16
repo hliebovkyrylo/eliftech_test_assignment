@@ -62,7 +62,7 @@ export const SignUpForm = () => {
       <div className="text-white">
         Already have an account?{" "}
         <Link className="text-slate-400" href={"/sign-in"}>
-          Sign In
+          Sign Up
         </Link>
       </div>
     </form>
