@@ -57,7 +57,7 @@ export default function Home() {
     <DndProvider backend={HTML5Backend}>
       <MainLayout>
         <QuestionnaireFilterPanel filters={filters} setFilters={setFilters} />
-        <section className="grid grid-cols-3 gap-4 mt-3">
+        <section className="grid grid-cols-3 max-[613px]:grid-cols-1 gap-4 mt-3">
           {questionnaires.map((questionnaire, index) => (
             <DraggableQuestionnaireCard
               key={questionnaire.id}
