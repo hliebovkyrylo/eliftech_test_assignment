@@ -13,6 +13,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/api";
 import { useRouter } from "next/router";
 import { endpoints } from "@/lib/api/endpoints";
+import { Loader } from "@/modules/common";
 
 export const CreateSurveyForm = () => {
   const router = useRouter();
@@ -56,6 +57,8 @@ export const CreateSurveyForm = () => {
   const onSubmit = handleSubmit((data: CreateQuestionnaireInput) => {
     mutation.mutate(data);
   });
+
+  if (mutation.isPending) return <Loader />;
 
   return (
     <form

@@ -45,8 +45,22 @@ export const VariantsFieldArray = ({
           >
             <TrashIcon className="w-6 h-6 text-white" />
           </button>
+          {errors.questions?.[questionIndex]?.variants?.[variantIndex]
+            ?.title && (
+            <span className="text-red-500 text-sm">
+              {
+                errors.questions[questionIndex].variants[variantIndex].title
+                  .message
+              }
+            </span>
+          )}
         </div>
       ))}
+      {errors.questions?.[questionIndex]?.variants && (
+        <span className="text-red-500 text-sm">
+          {errors.questions[questionIndex].variants.message}
+        </span>
+      )}
       <Button
         type="button"
         onClick={() => append({ title: "" })}
