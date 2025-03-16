@@ -44,7 +44,13 @@ export default function Home() {
     });
   }, []);
 
-  if (isLoading) return <p>Loading...</p>;
+  const { data: user, isLoading: isLoadingUser } = useQuery({
+    queryKey: [endpoints.getMe()],
+    queryFn: () => api.getMe(),
+    select: ({ data }) => data.data,
+  });
+
+  if (isLoading || isLoadingUser) return <p>Loading...</p>;
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -57,6 +63,7 @@ export default function Home() {
               data={questionnaire}
               index={index}
               moveCard={moveCard}
+              user={user}
             />
           ))}
         </section>

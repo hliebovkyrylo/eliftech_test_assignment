@@ -13,4 +13,5 @@ export const endpoints = {
     `${API_URL}/questionnaire/${id}/is-submitted`,
   getQuestionnaireResult: (id: string) =>
     `${API_URL}/result/questionnaire/${id}`,
+  getMe: () => `${API_URL}/user/me`,
 };

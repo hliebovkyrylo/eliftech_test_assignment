@@ -10,6 +10,7 @@ import cookie from "js-cookie";
 import { SubmitQuestionnaireType } from "@/modules/questionnaire/QuestionnaireForm/schemas/sendFormSchema";
 import { CreateQuestionnaireInput } from "@/modules/create-questionnaire/CreateSurveyForm/schemas/createQuestionnaire";
 import { UpdateQuestionnaireInput } from "@/modules/questionnaire/UpdateQuestionnaireForm/schemas/updateQuestionnaireSchema";
+import { User } from "../types/user";
 
 const authHeaders = () => {
   const token = cookie.get("accessToken");
@@ -43,7 +44,8 @@ export const api = {
   },
   deleteQuestionnaire: (id: string) => {
     return axios.delete<SuccessResponse<{ message: string }>>(
-      endpoints.deleteQuestionnaire(id)
+      endpoints.deleteQuestionnaire(id),
+      { headers: authHeaders() }
     );
   },
   submitQuestionnaire: (data: SubmitQuestionnaireType) => {
@@ -76,5 +78,10 @@ export const api = {
       endpoints.getQuestionnaireResult(id),
       { headers: authHeaders() }
     );
+  },
+  getMe: () => {
+    return axios.get<SuccessResponse<User>>(endpoints.getMe(), {
+      headers: authHeaders(),
+    });
   },
 };
