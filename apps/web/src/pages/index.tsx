@@ -6,9 +6,15 @@ import {
   SortOrder,
 } from "@/lib/types/getQuestionnairesFilters";
 import { MainLayout } from "@/modules/common";
-import { QuestionnaireCard, QuestionnaireFilterPanel } from "@/modules/home";
+import {
+  DraggableQuestionnaireCard,
+  QuestionnaireFilterPanel,
+} from "@/modules/home";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { GetQuestionnaires } from "@/lib/types/questionnaire";
 
 export default function Home() {
   const [filters, setFilters] = useState<QuestionnairesFilters>({
@@ -16,22 +22,45 @@ export default function Home() {
     sortOrder: SortOrder.ASC,
   });
 
-  const { data = [], isLoading } = useQuery({
+  const [questionnaires, setQuestionnaires] = useState<GetQuestionnaires[]>([]);
+
+  const { data, isLoading } = useQuery({
     queryKey: [endpoints.getAllQuestionnaires(), filters],
     queryFn: () => api.getAllQuestionnaires(filters),
-    select: ({ data }) => data.data.questionnaires,
+    select: ({ data }) => data.data.questionnaires as GetQuestionnaires[],
   });
+  useEffect(() => {
+    if (data) {
+      setQuestionnaires(data);
+    }
+  }, [data]);
+
+  const moveCard = useCallback((fromIndex: number, toIndex: number) => {
+    setQuestionnaires((prev) => {
+      const newOrder = [...prev];
+      const [movedItem] = newOrder.splice(fromIndex, 1);
+      newOrder.splice(toIndex, 0, movedItem);
+      return newOrder;
+    });
+  }, []);
 
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <MainLayout>
-      <QuestionnaireFilterPanel filters={filters} setFilters={setFilters} />
-      <section className="grid grid-cols-3 gap-4 mt-3">
-        {data.map((questionnaire) => (
-          <QuestionnaireCard data={questionnaire} key={questionnaire.id} />
-        ))}
-      </section>
-    </MainLayout>
+    <DndProvider backend={HTML5Backend}>
+      <MainLayout>
+        <QuestionnaireFilterPanel filters={filters} setFilters={setFilters} />
+        <section className="grid grid-cols-3 gap-4 mt-3">
+          {questionnaires.map((questionnaire, index) => (
+            <DraggableQuestionnaireCard
+              key={questionnaire.id}
+              data={questionnaire}
+              index={index}
+              moveCard={moveCard}
+            />
+          ))}
+        </section>
+      </MainLayout>
+    </DndProvider>
   );
 }
