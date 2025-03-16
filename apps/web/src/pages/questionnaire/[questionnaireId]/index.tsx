@@ -34,6 +34,7 @@ export default function Questionnaire() {
       queryKey: [endpoints.getQuestionnaireResult(questionnaireId as string)],
       queryFn: () => api.getQuestionnaireResult(questionnaireId as string),
       select: ({ data }) => data.data,
+      retry: false,
     });
 
   if (

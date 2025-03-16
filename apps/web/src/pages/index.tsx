@@ -48,6 +48,7 @@ export default function Home() {
     queryKey: [endpoints.getMe()],
     queryFn: () => api.getMe(),
     select: ({ data }) => data.data,
+    retry: false,
   });
 
   if (isLoading || isLoadingUser) return <p>Loading...</p>;
