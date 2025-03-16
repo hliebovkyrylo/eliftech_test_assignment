@@ -45,8 +45,15 @@ export class QuestionnaireController {
 
   @Delete('delete/:questionnaireId')
   @UseGuards(AuthGuard)
-  async deleteQuestionnaire(@Param('questionnaireId') questionnaireId: string) {
-    await this.questionnaireService.deleteQuestionnaire(questionnaireId);
+  async deleteQuestionnaire(
+    @Req() req,
+    @Param('questionnaireId') questionnaireId: string,
+  ) {
+    const userId = req.user.id;
+    await this.questionnaireService.deleteQuestionnaire(
+      userId,
+      questionnaireId,
+    );
 
     return { message: 'Questionnaire deleted successfully' };
   }

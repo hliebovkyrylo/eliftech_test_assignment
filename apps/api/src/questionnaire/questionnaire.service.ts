@@ -123,14 +123,32 @@ export class QuestionnaireService {
     }
   }
 
-  async deleteQuestionnaire(id: string): Promise<Questionnaire> {
+  async deleteQuestionnaire(
+    userId: string,
+    questionnaireId: string,
+  ): Promise<Questionnaire> {
     try {
+      const questionnaire = await this.prisma.questionnaire.findUnique({
+        where: { id: questionnaireId },
+      });
+
+      if (!questionnaire) {
+        throw new NotFoundException('Questionnaire not found');
+      }
+
+      if (userId !== questionnaire.userId) {
+        throw new ForbiddenException('You have no access to change this');
+      }
+
       return this.prisma.questionnaire.delete({
-        where: { id },
+        where: { id: questionnaireId },
       });
     } catch (error) {
-      if (error.code === 'P2025') {
-        throw new NotFoundException('Questionnaire not found');
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
       }
 
       throw new InternalServerErrorException('Error deleting questionnaire');
