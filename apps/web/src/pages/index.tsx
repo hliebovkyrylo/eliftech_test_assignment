@@ -1,48 +1,46 @@
 import { api } from "@/lib/api/api";
 import { endpoints } from "@/lib/api/endpoints";
-import {
-  QuestionnairesFilters,
-  SortBy,
-  SortOrder,
-} from "@/lib/types/getQuestionnairesFilters";
+import { SortBy, SortOrder } from "@/lib/types/getQuestionnairesFilters";
 import { MainLayout } from "@/modules/common";
 import {
   DraggableQuestionnaireCard,
   QuestionnaireFilterPanel,
+  useInfiniteScroll,
 } from "@/modules/home";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { GetQuestionnaires } from "@/lib/types/questionnaire";
 
 export default function Home() {
-  const [filters, setFilters] = useState<QuestionnairesFilters>({
+  const initialFilters = {
     sortBy: SortBy.TITLE,
     sortOrder: SortOrder.ASC,
-  });
+  };
 
-  const [questionnaires, setQuestionnaires] = useState<GetQuestionnaires[]>([]);
-
-  const { data, isLoading } = useQuery({
-    queryKey: [endpoints.getAllQuestionnaires(), filters],
-    queryFn: () => api.getAllQuestionnaires(filters),
+  const {
+    filters,
+    setFilters,
+    items: questionnaires,
+    hasMore,
+    isFetching,
+    loadMoreRef,
+    moveItems,
+  } = useInfiniteScroll<GetQuestionnaires>({
+    queryKey: endpoints.getAllQuestionnaires(),
+    queryFn: (filters) => api.getAllQuestionnaires(filters),
     select: ({ data }) => data.data.questionnaires as GetQuestionnaires[],
+    initialFilters,
+    pageSize: 12,
   });
-  useEffect(() => {
-    if (data) {
-      setQuestionnaires(data);
-    }
-  }, [data]);
 
-  const moveCard = useCallback((fromIndex: number, toIndex: number) => {
-    setQuestionnaires((prev) => {
-      const newOrder = [...prev];
-      const [movedItem] = newOrder.splice(fromIndex, 1);
-      newOrder.splice(toIndex, 0, movedItem);
-      return newOrder;
-    });
-  }, []);
+  const moveCard = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      moveItems(fromIndex, toIndex);
+    },
+    [moveItems]
+  );
 
   const { data: user, isLoading: isLoadingUser } = useQuery({
     queryKey: [endpoints.getMe()],
@@ -51,7 +49,7 @@ export default function Home() {
     retry: false,
   });
 
-  if (isLoading || isLoadingUser) return <p>Loading...</p>;
+  if (isLoadingUser) return <p>Loading...</p>;
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -68,6 +66,11 @@ export default function Home() {
             />
           ))}
         </section>
+        {hasMore && (
+          <div ref={loadMoreRef} className="h-10">
+            {isFetching ? <p>Loading more...</p> : null}
+          </div>
+        )}
       </MainLayout>
     </DndProvider>
   );
