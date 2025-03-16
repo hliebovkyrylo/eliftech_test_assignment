@@ -15,6 +15,7 @@ import { QuestionnaireDto } from './dto/questionnaire.dto';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { GetAllQuestionnairesDto } from './dto/getAllQuestionnaires.dto';
 import { SubmitQuestionnaireDto } from './dto/submitQuestionnaire.dto';
+import { UpdateQuestionnaireDto } from './dto/updateQuestionnaire.dto';
 
 @Controller('questionnaire')
 export class QuestionnaireController {
@@ -31,7 +32,7 @@ export class QuestionnaireController {
   @UseGuards(AuthGuard)
   async updateQuestionnaire(
     @Req() req,
-    @Body() data: QuestionnaireDto,
+    @Body() data: UpdateQuestionnaireDto,
     @Param('questionnaireId') questionnaireId: string,
   ) {
     const userId = req.user.id;

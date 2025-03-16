@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -14,6 +15,7 @@ import {
   SortOrder,
 } from './dto/getAllQuestionnaires.dto';
 import { SubmitQuestionnaireDto } from './dto/submitQuestionnaire.dto';
+import { UpdateQuestionnaireDto } from './dto/updateQuestionnaire.dto';
 
 @Injectable()
 export class QuestionnaireService {
@@ -89,91 +91,34 @@ export class QuestionnaireService {
 
   async updateQuestionnaire(
     id: string,
-    data: QuestionnaireDto,
+    data: UpdateQuestionnaireDto,
     userId: string,
   ) {
     try {
-      const existingQuestionnaire = await this.prisma.questionnaire.findFirst({
-        where: {
-          id,
-          userId,
-        },
+      const questionnaire = await this.prisma.questionnaire.findUnique({
+        where: { id },
       });
 
-      if (!existingQuestionnaire) {
-        throw new NotFoundException(
-          'Questionnaire not found or you do not have permission to update it',
-        );
+      if (!questionnaire) {
+        throw new NotFoundException('Questionnaire not found');
       }
 
-      const { title, description, questions } = data;
+      if (questionnaire.userId.toString() !== userId.toString()) {
+        throw new ForbiddenException('Have no access to change it');
+      }
 
-      return await this.prisma.$transaction(async (tx) => {
-        const updatedQuestionnaire = await tx.questionnaire.update({
-          where: { id },
-          data: {
-            title,
-            description,
-          },
-        });
-
-        await tx.question.deleteMany({
-          where: {
-            questionnaireId: id,
-          },
-        });
-
-        const updatedQuestions: Array<{
-          id: string;
-          title: string;
-          type: string;
-          questionnaireId: string;
-          variants: { id: string; title: string; questionId: string }[];
-        }> = [];
-
-        for (const question of questions) {
-          const createdQuestion = await tx.question.create({
-            data: {
-              title: question.title,
-              type: question.type,
-              questionnaireId: id,
-            },
-          });
-
-          if (
-            question.variants &&
-            (question.type === 'MULTIPLE_CHOICE' ||
-              question.type === 'ONE_CHOICE')
-          ) {
-            const variants = await Promise.all(
-              question.variants.map((variant) =>
-                tx.variant.create({
-                  data: {
-                    title: variant.title,
-                    questionId: createdQuestion.id,
-                  },
-                }),
-              ),
-            );
-
-            updatedQuestions.push({
-              ...createdQuestion,
-              variants,
-            });
-          } else {
-            updatedQuestions.push({
-              ...createdQuestion,
-              variants: [],
-            });
-          }
-        }
-
-        return {
-          ...updatedQuestionnaire,
-          questions: updatedQuestions,
-        };
+      return this.prisma.questionnaire.update({
+        where: { id },
+        data,
       });
     } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Error updating questionnaire');
     }
   }
