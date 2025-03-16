@@ -12,15 +12,17 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ResponseInterceptor());
 
-  app.useGlobalPipes(new ValidationPipe({
-    exceptionFactory: (validationErrors: ValidationError[] = []) => {
-      const constraints = validationErrors[0].constraints;
-      return new BadRequestException(constraints);
-    },
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        const constraints = validationErrors[0].constraints;
+        return new BadRequestException(constraints);
+      },
+    }),
+  );
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
