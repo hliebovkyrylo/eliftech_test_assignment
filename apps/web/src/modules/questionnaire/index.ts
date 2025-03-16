@@ -1,3 +1,3 @@
-export * from "./QuestionnaireForm";
-export * from "./QuestionnaireResultViewer";
-export * from "./UpdateQuestionnaireForm";
+export * from "./create-questionaire";
+export * from "./submit-questionnaire";
+export * from "./update-questionnaire";

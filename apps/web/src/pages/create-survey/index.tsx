@@ -1,5 +1,5 @@
 import { AuthGuard, MainLayout } from "@/modules/common";
-import { CreateSurveyForm } from "@/modules/create-questionnaire";
+import { CreateSurveyForm } from "@/modules/questionnaire";
 
 export default function CreateSurvey() {
   return (

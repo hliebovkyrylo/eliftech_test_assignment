@@ -4,12 +4,12 @@ import { SuccessResponse } from "../types/apiResponse";
 import { GetQuestionnaires, Questionnaire } from "../types/questionnaire";
 import { endpoints } from "./endpoints";
 import { Result } from "../types/result";
-import { SignInInput } from "@/modules/auth/SignInForm/schemas/signInSchema";
-import { SignUpInput } from "@/modules/auth/SignUpForm/schemas/signUpSchema";
+import { SignInInput } from "@/modules/auth/sign-in/SignInForm/schemas/signInSchema";
+import { SignUpInput } from "@/modules/auth/sign-up/SignUpForm/schemas/signUpSchema";
 import cookie from "js-cookie";
-import { SubmitQuestionnaireType } from "@/modules/questionnaire/QuestionnaireForm/schemas/sendFormSchema";
-import { CreateQuestionnaireInput } from "@/modules/create-questionnaire/CreateSurveyForm/schemas/createQuestionnaire";
-import { UpdateQuestionnaireInput } from "@/modules/questionnaire/UpdateQuestionnaireForm/schemas/updateQuestionnaireSchema";
+import { SubmitQuestionnaireType } from "@/modules/questionnaire/submit-questionnaire/QuestionnaireForm/schemas/sendFormSchema";
+import { CreateQuestionnaireInput } from "@/modules/questionnaire/create-questionaire/CreateSurveyForm/schemas/createQuestionnaire";
+import { UpdateQuestionnaireInput } from "@/modules/questionnaire/update-questionnaire/UpdateQuestionnaireForm/schemas/updateQuestionnaireSchema";
 import { User } from "../types/user";
 
 const authHeaders = () => {

@@ -1,4 +1,4 @@
-import { SortOrderSelect } from "@/modules/create-questionnaire/CreateSurveyForm/components";
+import { SortOrderSelect } from "@/modules/questionnaire/create-questionaire/CreateSurveyForm/components";
 import { SortBySelect } from "./components";
 import { QuestionnairesFilters, SortBy, SortOrder } from "@/lib/types/getQuestionnairesFilters";
 
