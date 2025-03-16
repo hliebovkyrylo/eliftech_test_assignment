@@ -1,16 +1,38 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/select";
+import { Control, Controller, FieldValues } from "react-hook-form";
+import { CreateQuestionnaireInput } from "../schemas/createQuestionnaire";
 
-export const QuestionTypeSelect = () => {
+interface QuestionTypeSelectProps {
+  control: Control<CreateQuestionnaireInput>;
+  name: any;
+}
+
+export const QuestionTypeSelect = ({
+  control,
+  name,
+}: QuestionTypeSelectProps) => {
   return (
-    <Select defaultValue="text">
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a fruit" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="text">Text</SelectItem>
-        <SelectItem value="single_choice">Single Choice</SelectItem>
-        <SelectItem value="multiple_choice">Multiple Choice</SelectItem>
-      </SelectContent>
-    </Select>
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <Select onValueChange={field.onChange} value={field.value || "TEXT"}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select question type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="TEXT">Text</SelectItem>
+            <SelectItem value="ONE_CHOICE">Single Choice</SelectItem>
+            <SelectItem value="MULTIPLE_CHOICE">Multiple Choice</SelectItem>
+          </SelectContent>
+        </Select>
+      )}
+    />
   );
 };

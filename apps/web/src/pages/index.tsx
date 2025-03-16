@@ -28,8 +28,8 @@ export default function Home() {
     <MainLayout>
       <QuestionnaireFilterPanel filters={filters} setFilters={setFilters} />
       <section className="grid grid-cols-3 gap-4 mt-3">
-        {data.map((questionnaire, index) => (
-          <QuestionnaireCard data={questionnaire} key={index} />
+        {data.map((questionnaire) => (
+          <QuestionnaireCard data={questionnaire} key={questionnaire.id} />
         ))}
       </section>
     </MainLayout>

@@ -23,7 +23,7 @@ export class GetAllQuestionnairesDto {
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  pageSize?: number = 10;
+  pageSize?: number = 100;
 
   @IsOptional()
   @IsEnum(SortBy)

@@ -26,7 +26,7 @@ export const QuestionnaireCard = ({ data }: { data: GetQuestionnaires }) => {
             </DropdownMenuTrigger>
           </DropdownMenu>
         </CardTitle>
-        <CardContent>{data.description}</CardContent>
+        <CardContent className="truncate">{data.description}</CardContent>
         <CardFooter className="block">
           <p>Questions: {data._count.questions}</p>
           <p>Fillings: {data._count.results}</p>

@@ -197,7 +197,7 @@ export class QuestionnaireService {
   ): Promise<{ questionnaires: Questionnaire[]; total: number }> {
     const {
       page = 1,
-      pageSize = 10,
+      pageSize = 100,
       sortBy = SortBy.TITLE,
       sortOrder = SortOrder.ASC,
     } = dto;

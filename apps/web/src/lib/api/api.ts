@@ -8,6 +8,7 @@ import { SignInInput } from "@/modules/auth/SignInForm/schemas/signInSchema";
 import { SignUpInput } from "@/modules/auth/SignUpForm/schemas/signUpSchema";
 import cookie from "js-cookie";
 import { SubmitQuestionnaireType } from "@/modules/questionnaire/QuestionnaireForm/schemas/sendFormSchema";
+import { CreateQuestionnaireInput } from "@/modules/create-questionnaire/CreateSurveyForm/schemas/createQuestionnaire";
 
 const authHeaders = () => {
   const token = cookie.get("accessToken");
@@ -25,10 +26,11 @@ export const api = {
       endpoints.getQuestionnaire(id)
     );
   },
-  createQuestionnaire: (data: Partial<Questionnaire>) => {
+  createQuestionnaire: (data: CreateQuestionnaireInput) => {
     return axios.post<SuccessResponse<Questionnaire>>(
       endpoints.createQuestionnaire(),
-      data
+      data,
+      { headers: authHeaders() }
     );
   },
   updateQuestionnaire: (id: string, data: Partial<Questionnaire>) => {
