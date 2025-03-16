@@ -9,6 +9,7 @@ import { SignUpInput } from "@/modules/auth/SignUpForm/schemas/signUpSchema";
 import cookie from "js-cookie";
 import { SubmitQuestionnaireType } from "@/modules/questionnaire/QuestionnaireForm/schemas/sendFormSchema";
 import { CreateQuestionnaireInput } from "@/modules/create-questionnaire/CreateSurveyForm/schemas/createQuestionnaire";
+import { UpdateQuestionnaireInput } from "@/modules/questionnaire/UpdateQuestionnaireForm/schemas/updateQuestionnaireSchema";
 
 const authHeaders = () => {
   const token = cookie.get("accessToken");
@@ -33,10 +34,11 @@ export const api = {
       { headers: authHeaders() }
     );
   },
-  updateQuestionnaire: (id: string, data: Partial<Questionnaire>) => {
+  updateQuestionnaire: (id: string, data: UpdateQuestionnaireInput) => {
     return axios.put<SuccessResponse<Questionnaire>>(
       endpoints.updateQuestionnaire(id),
-      data
+      data,
+      { headers: authHeaders() }
     );
   },
   deleteQuestionnaire: (id: string) => {

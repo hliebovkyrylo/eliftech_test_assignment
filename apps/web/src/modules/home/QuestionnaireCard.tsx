@@ -20,7 +20,9 @@ export const QuestionnaireCard = ({ data }: { data: GetQuestionnaires }) => {
               <EllipsisHorizontalIcon className="h-5 w-5" />
               <DropdownMenuContent>
                 <DropdownMenuItem>Run</DropdownMenuItem>
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`/questionnaire/${data.id}/update`}>Edit</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenuTrigger>
