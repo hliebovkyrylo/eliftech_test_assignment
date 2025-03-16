@@ -16,7 +16,15 @@ export default function UpdateQuestionnaire() {
     select: ({ data }) => data.data,
   });
 
-  if (questionnaireLoading) return <div>Loading...</div>;
+  const { data: user, isLoading: userLoading } = useQuery({
+    queryKey: [endpoints.getMe()],
+    queryFn: () => api.getMe(),
+    select: ({ data }) => data.data,
+  });
+
+  if (questionnaireLoading || userLoading) return <div>Loading...</div>;
+
+  if (user?.id !== questionnaire?.userId) router.replace("/");
 
   return (
     <AuthGuard>
